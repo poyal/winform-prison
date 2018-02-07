@@ -45,7 +45,7 @@ namespace Winform
         {
             InitializeComponent();
 
-            conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=admin;Database=postgres");
+            conn = new NpgsqlConnection("Host=192.168.10.68;Username=postgres;Password=admin;Database=postgres");
             conn.Open();
 
             GroupButtonSetting();
