@@ -11,6 +11,8 @@ using System.IO;
 using System.IO.Ports;
 using System.Collections;
 using Npgsql;
+using DigestTest;
+using Newtonsoft.Json.Linq;
 
 namespace Winform
 {
@@ -34,12 +36,7 @@ namespace Winform
 
         string selectGroupCode = "";
         string selectRoomCode = "";
-        string cameraHeader = "rtsp://";
-        string cameraIp = "192.168.10.124";
-        string cameraUserName = "admin";
-        string cameraUserPassword = "Tjxldnpdj2018!";
-        string cameraUrl = "/1/high";
-
+        
         string cameraGroupCode = "";
         string cameraRoomCode = "";
         System.Timers.Timer aTimer;
@@ -588,9 +585,21 @@ namespace Winform
                 cameraGroupCode = selectGroupCode;
                 cameraRoomCode = selectRoomCode;
 
-                axVLCPlugin21.playlist.add(cameraHeader + cameraUserName + ":" + cameraUserPassword + "@" + cameraIp + cameraUrl, null, null);
-                axVLCPlugin21.playlist.next();
-                axVLCPlugin21.playlist.play();
+                string rtspHeader = Properties.NVRAccessSetting.Default.RTSP_HEADER;
+                string httpHeader = Properties.NVRAccessSetting.Default.HTTP_HEADER;
+                string userName = Properties.NVRAccessSetting.Default.NVR_USER_NAME;
+                string userPw = Properties.NVRAccessSetting.Default.NVR_USER_PW;
+                string nvrIp = Properties.NVRAccessSetting.Default.NVR_IP;
+
+                //axVLCPlugin21.playlist.add(rtspHeader + userName + ":" + userPw + "@" + nvrIp + "/1/high", null, null);
+                //axVLCPlugin21.playlist.next();
+                //axVLCPlugin21.playlist.play();
+
+                DigestAuthFixer digest = new DigestAuthFixer(httpHeader + nvrIp, userName, userPw);
+
+                JObject jsonReturn = digest.GrabResponse("/control/ptz.cgi?channel=1&level=1&preset=1");
+
+                Console.WriteLine("jsonReturn = " + jsonReturn["Result"]["Code"]);
             }
         }
     }
