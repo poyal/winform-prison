@@ -591,9 +591,9 @@ namespace Winform
                 string userPw = Properties.NVRAccessSetting.Default.NVR_USER_PW;
                 string nvrIp = Properties.NVRAccessSetting.Default.NVR_IP;
 
-                //axVLCPlugin21.playlist.add(rtspHeader + userName + ":" + userPw + "@" + nvrIp + "/1/high", null, null);
-                //axVLCPlugin21.playlist.next();
-                //axVLCPlugin21.playlist.play();
+                axVLCPlugin21.playlist.add(rtspHeader + userName + ":" + userPw + "@" + nvrIp + "/1/high", null, null);
+                axVLCPlugin21.playlist.next();
+                axVLCPlugin21.playlist.play();
 
                 DigestAuthFixer digest = new DigestAuthFixer(httpHeader + nvrIp, userName, userPw);
 
