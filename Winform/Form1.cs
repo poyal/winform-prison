@@ -55,7 +55,7 @@ namespace Winform
         {
             InitializeComponent();
 
-            conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=admin;Database=postgres");
+            conn = new NpgsqlConnection("Host=192.168.10.124;Username=postgres;Password=admin;Database=postgres");
             conn.Open();
 
             GroupButtonSetting();
@@ -194,6 +194,7 @@ namespace Winform
             selectRoomCode = "R" + ReturnIntToString(room.ToString());
             GroupChange(selectGroupCode);
             RoomChange(selectGroupCode, selectRoomCode);
+            CameraPTZ();
         }
 
         // 방 상태 변경
@@ -333,8 +334,6 @@ namespace Winform
                     searchBtn.BackColor = System.Drawing.Color.Red;
                 }
             }
-
-
         }
 
         // 방열림 이벤트 로그
@@ -611,18 +610,14 @@ namespace Winform
                 axVLCPlugin21.playlist.next();
                 axVLCPlugin21.playlist.play();
             }
-
-            CameraPTZ();
         }
 
         private void CameraPTZ()
         {
-
             Console.WriteLine("======================================== CameraPTZ =================================");
             DigestAuthFixer digest = new DigestAuthFixer(httpHeader + nvrIp, userName, userPw);
             JObject jsonReturn = digest.GrabResponse("/control/ptz.cgi?channel=" + channel + " &level=" + level + "&preset=" + preset);
             Console.WriteLine("jsonReturn = " + jsonReturn["Result"]["Code"]);
         }
-        
     }
 }
