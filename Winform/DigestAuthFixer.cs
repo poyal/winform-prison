@@ -51,8 +51,7 @@ namespace DigestTest
             throw new ApplicationException(string.Format("Header {0} not found", varName));
         }
 
-        private string GetDigestHeader(
-            string dir)
+        private string GetDigestHeader(string dir)
         {
             _nc = _nc + 1;
 

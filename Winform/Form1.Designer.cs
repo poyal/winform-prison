@@ -39,7 +39,6 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.room_textBox = new System.Windows.Forms.TextBox();
             this.R20 = new System.Windows.Forms.Button();
@@ -74,6 +73,7 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.axVLCPlugin21 = new AxAXVLC.AxVLCPlugin2();
+            this.textBox3 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel2.SuspendLayout();
@@ -94,7 +94,7 @@
             // 
             this.camera_preset_info.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.camera_preset_info.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.camera_preset_info.Font = new System.Drawing.Font("굴림", 10F);
+            this.camera_preset_info.Font = new System.Drawing.Font("Gulim", 10F);
             this.camera_preset_info.ForeColor = System.Drawing.SystemColors.Menu;
             this.camera_preset_info.Location = new System.Drawing.Point(873, 201);
             this.camera_preset_info.Margin = new System.Windows.Forms.Padding(0);
@@ -107,7 +107,7 @@
             // 
             this.room_detail_textBox.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.room_detail_textBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.room_detail_textBox.Font = new System.Drawing.Font("굴림", 15F);
+            this.room_detail_textBox.Font = new System.Drawing.Font("Gulim", 15F);
             this.room_detail_textBox.ForeColor = System.Drawing.SystemColors.MenuText;
             this.room_detail_textBox.Location = new System.Drawing.Point(271, 224);
             this.room_detail_textBox.Margin = new System.Windows.Forms.Padding(0);
@@ -196,7 +196,7 @@
             // 
             this.textBox1.BackColor = System.Drawing.SystemColors.MenuText;
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox1.Font = new System.Drawing.Font("굴림", 10F);
+            this.textBox1.Font = new System.Drawing.Font("Gulim", 10F);
             this.textBox1.ForeColor = System.Drawing.SystemColors.Window;
             this.textBox1.Location = new System.Drawing.Point(873, 441);
             this.textBox1.Margin = new System.Windows.Forms.Padding(0);
@@ -209,7 +209,7 @@
             // 
             this.textBox5.BackColor = System.Drawing.SystemColors.MenuText;
             this.textBox5.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox5.Font = new System.Drawing.Font("굴림", 10F);
+            this.textBox5.Font = new System.Drawing.Font("Gulim", 10F);
             this.textBox5.ForeColor = System.Drawing.SystemColors.Window;
             this.textBox5.Location = new System.Drawing.Point(787, 201);
             this.textBox5.Margin = new System.Windows.Forms.Padding(0);
@@ -222,7 +222,7 @@
             // 
             this.textBox4.BackColor = System.Drawing.SystemColors.MenuText;
             this.textBox4.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox4.Font = new System.Drawing.Font("굴림", 10F);
+            this.textBox4.Font = new System.Drawing.Font("Gulim", 10F);
             this.textBox4.ForeColor = System.Drawing.SystemColors.Window;
             this.textBox4.Location = new System.Drawing.Point(13, 441);
             this.textBox4.Margin = new System.Windows.Forms.Padding(0);
@@ -231,24 +231,11 @@
             this.textBox4.TabIndex = 60;
             this.textBox4.Text = "알림상황";
             // 
-            // textBox3
-            // 
-            this.textBox3.BackColor = System.Drawing.SystemColors.MenuText;
-            this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox3.Font = new System.Drawing.Font("굴림", 10F);
-            this.textBox3.ForeColor = System.Drawing.SystemColors.Window;
-            this.textBox3.Location = new System.Drawing.Point(12, 7);
-            this.textBox3.Margin = new System.Windows.Forms.Padding(0);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(253, 16);
-            this.textBox3.TabIndex = 59;
-            this.textBox3.Text = "수감동";
-            // 
             // textBox2
             // 
             this.textBox2.BackColor = System.Drawing.SystemColors.MenuText;
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox2.Font = new System.Drawing.Font("굴림", 10F);
+            this.textBox2.Font = new System.Drawing.Font("Gulim", 10F);
             this.textBox2.ForeColor = System.Drawing.SystemColors.Window;
             this.textBox2.Location = new System.Drawing.Point(271, 201);
             this.textBox2.Margin = new System.Windows.Forms.Padding(0);
@@ -261,7 +248,7 @@
             // 
             this.room_textBox.BackColor = System.Drawing.SystemColors.MenuText;
             this.room_textBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.room_textBox.Font = new System.Drawing.Font("굴림", 10F);
+            this.room_textBox.Font = new System.Drawing.Font("Gulim", 10F);
             this.room_textBox.ForeColor = System.Drawing.SystemColors.Window;
             this.room_textBox.Location = new System.Drawing.Point(271, 7);
             this.room_textBox.Margin = new System.Windows.Forms.Padding(0);
@@ -591,8 +578,21 @@
             this.axVLCPlugin21.Location = new System.Drawing.Point(787, 220);
             this.axVLCPlugin21.Name = "axVLCPlugin21";
             this.axVLCPlugin21.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axVLCPlugin21.OcxState")));
-            this.axVLCPlugin21.Size = new System.Drawing.Size(333, 218);
+            this.axVLCPlugin21.Size = new System.Drawing.Size(334, 218);
             this.axVLCPlugin21.TabIndex = 65;
+            // 
+            // textBox3
+            // 
+            this.textBox3.BackColor = System.Drawing.SystemColors.MenuText;
+            this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox3.Font = new System.Drawing.Font("Gulim", 10F);
+            this.textBox3.ForeColor = System.Drawing.SystemColors.Window;
+            this.textBox3.Location = new System.Drawing.Point(12, 7);
+            this.textBox3.Margin = new System.Windows.Forms.Padding(0);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(253, 16);
+            this.textBox3.TabIndex = 59;
+            this.textBox3.Text = "수감동";
             // 
             // Form1
             // 
@@ -658,7 +658,6 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox room_textBox;
         private System.Windows.Forms.Button R20;
@@ -693,6 +692,7 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel1;
         private AxAXVLC.AxVLCPlugin2 axVLCPlugin21;
+        private System.Windows.Forms.TextBox textBox3;
     }
 }
 

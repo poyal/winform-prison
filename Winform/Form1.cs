@@ -41,17 +41,27 @@ namespace Winform
         string cameraRoomCode = "";
         System.Timers.Timer aTimer;
 
+        string rtspHeader = Properties.NVRAccessSetting.Default.RTSP_HEADER;
+        string httpHeader = Properties.NVRAccessSetting.Default.HTTP_HEADER;
+        string userName = Properties.NVRAccessSetting.Default.NVR_USER_NAME;
+        string userPw = Properties.NVRAccessSetting.Default.NVR_USER_PW;
+        string nvrIp = Properties.NVRAccessSetting.Default.NVR_IP;
+
+        string channel = "2";
+        string level = "1";
+        string preset = "1";
+
         public Form1()
         {
             InitializeComponent();
 
-            conn = new NpgsqlConnection("Host=192.168.10.68;Username=postgres;Password=admin;Database=postgres");
+            conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=admin;Database=postgres");
             conn.Open();
 
             GroupButtonSetting();
             OpenLogHistiorySetting();
-            GroupChange(selectGroupCode);
-            RoomChange(selectGroupCode, selectRoomCode);
+            //GroupChange(selectGroupCode);
+            //RoomChange(selectGroupCode, selectRoomCode);
             SensorSearchTimer();
             //SensorSetting();
         }
@@ -189,6 +199,7 @@ namespace Winform
         // 방 상태 변경
         private void RoomStatusUpdate(int group, int room, string status)
         {
+            Console.WriteLine(" ================================== RoomStatusUpdate ==========================");
             string groupStr = group.ToString();
             string roomStr = room.ToString();
             string sql = "";
@@ -198,20 +209,28 @@ namespace Winform
             {
                 sql += "room_status = 'O', ";
                 sql += "room_open_time = now() ";
+
+                //preset 조정
+                preset = "2";
             }
             else if (status.Equals("C"))
             {
                 sql += "room_status = 'C', ";
                 sql += "room_close_time = now() ";
+
+                //preset 조정
+                preset = "1";
             }
             sql += "WHERE ";
             sql += "group_code = 'G" + ReturnIntToString(groupStr) + "' AND room_code = 'R" + ReturnIntToString(roomStr) + "'";
 
             query = new NpgsqlCommand(sql, conn);
-
+            
             query.ExecuteNonQuery();
 
             query.Dispose();
+
+
         }
 
         // 사동 그룹 정보 셋팅
@@ -314,6 +333,8 @@ namespace Winform
                     searchBtn.BackColor = System.Drawing.Color.Red;
                 }
             }
+
+
         }
 
         // 방열림 이벤트 로그
@@ -560,7 +581,7 @@ namespace Winform
             string group_code = rows[0]["group_code"].ToString();
             string room_code = rows[0]["room_code"].ToString();
             string camera = rows[0]["camera"].ToString();
-            string preset = rows[0]["preset"].ToString();
+            string preset = "1";
             camera_preset_info.Text = camera + " / " + preset;
 
             CameraChange(groupCode, roomCode, camera, preset);
@@ -580,27 +601,28 @@ namespace Winform
 
         private void CameraChange(string groupCode, string roomCode, string camera, string preset)
         {
+            Console.WriteLine(" ============= CameraChange ==============");
             if (!(selectGroupCode == cameraGroupCode && selectRoomCode == cameraRoomCode))
             {
                 cameraGroupCode = selectGroupCode;
                 cameraRoomCode = selectRoomCode;
 
-                string rtspHeader = Properties.NVRAccessSetting.Default.RTSP_HEADER;
-                string httpHeader = Properties.NVRAccessSetting.Default.HTTP_HEADER;
-                string userName = Properties.NVRAccessSetting.Default.NVR_USER_NAME;
-                string userPw = Properties.NVRAccessSetting.Default.NVR_USER_PW;
-                string nvrIp = Properties.NVRAccessSetting.Default.NVR_IP;
-
-                axVLCPlugin21.playlist.add(rtspHeader + userName + ":" + userPw + "@" + nvrIp + "/1/high", null, null);
+                axVLCPlugin21.playlist.add(rtspHeader + userName + ":" + userPw + "@" + nvrIp + "/2/high", null, null);
                 axVLCPlugin21.playlist.next();
                 axVLCPlugin21.playlist.play();
-
-                DigestAuthFixer digest = new DigestAuthFixer(httpHeader + nvrIp, userName, userPw);
-
-                JObject jsonReturn = digest.GrabResponse("/control/ptz.cgi?channel=1&level=1&preset=1");
-
-                Console.WriteLine("jsonReturn = " + jsonReturn["Result"]["Code"]);
             }
+
+            CameraPTZ();
         }
+
+        private void CameraPTZ()
+        {
+
+            Console.WriteLine("======================================== CameraPTZ =================================");
+            DigestAuthFixer digest = new DigestAuthFixer(httpHeader + nvrIp, userName, userPw);
+            JObject jsonReturn = digest.GrabResponse("/control/ptz.cgi?channel=" + channel + " &level=" + level + "&preset=" + preset);
+            Console.WriteLine("jsonReturn = " + jsonReturn["Result"]["Code"]);
+        }
+        
     }
 }
