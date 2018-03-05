@@ -62,8 +62,8 @@ namespace Winform
 
             GroupButtonSetting();
             OpenLogHistiorySetting();
-            //GroupChange(selectGroupCode);
-            //RoomChange(selectGroupCode, selectRoomCode);
+            GroupChange(selectGroupCode);
+            RoomChange(selectGroupCode, selectRoomCode);
             SensorSearchTimer();
             //SensorSetting();
         }
@@ -152,10 +152,15 @@ namespace Winform
 
                     if (data.Trim() != sensorSignal)
                     {
+                        if(sensorSignal == "")
+                        {
+                            isOpenFlag = true;
+                        }
+
                         sensorSignal = data.Trim();
 
-                        Console.WriteLine("-------------------------");
-                        Console.WriteLine("data = " + data.Trim());
+                        //Console.WriteLine("-------------------------");
+                        //Console.WriteLine("data = " + data.Trim());
 
                         string status = "";
                         if (data.Trim() == "1")
@@ -199,6 +204,15 @@ namespace Winform
             selectRoomCode = "R" + ReturnIntToString(room.ToString());
             GroupChange(selectGroupCode);
             RoomChange(selectGroupCode, selectRoomCode);
+            Console.WriteLine("isOpenFlag = " + isOpenFlag);
+            if (!isOpenFlag)
+            {
+                CameraPTZ();
+            }
+            else
+            {
+                isOpenFlag = false;
+            }
         }
 
         // 방 상태 변경
@@ -589,15 +603,6 @@ namespace Winform
             camera_preset_info.Text = camera + " / " + preset;
 
             CameraChange(groupCode, roomCode, camera, preset);
-
-            if (!isOpenFlag)
-            {
-                CameraPTZ();
-            }
-            else
-            {
-                isOpenFlag = false;
-            }
         }
 
         // string 숫자 두자리 변형
