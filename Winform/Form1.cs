@@ -588,7 +588,7 @@ namespace Winform
             string preset = "1";
             camera_preset_info.Text = camera + " / " + preset;
 
-            //CameraChange(groupCode, roomCode, camera, preset);
+            CameraChange(groupCode, roomCode, camera, preset);
 
             if (!isOpenFlag)
             {
