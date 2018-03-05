@@ -51,6 +51,8 @@ namespace Winform
         string level = "1";
         string preset = "1";
 
+        Boolean isOpenFlag = true;
+
         public Form1()
         {
             InitializeComponent();
@@ -142,7 +144,6 @@ namespace Winform
             {
                 string data = serialPort1.ReadExisting();
 
-
                 if (data.Trim() != string.Empty)
                 {
                     char[] values = data.ToCharArray();
@@ -156,14 +157,19 @@ namespace Winform
                         Console.WriteLine("-------------------------");
                         Console.WriteLine("data = " + data.Trim());
 
-                        string status = "O";
+                        string status = "";
                         if (data.Trim() == "1")
                         {
                             status = "C";
+                            RoomStatusUpdate(1, 1, status);
+                            SensorSignalCollector(1, 1, status);
                         }
-
-                        RoomStatusUpdate(1, 1, status);
-                        SensorSignalCollector(1, 1, status);
+                        else if(data.Trim() == "0")
+                        {
+                            status = "O";
+                            RoomStatusUpdate(1, 1, status);
+                            SensorSignalCollector(1, 1, status);
+                        }
                     }
                 }
             }
@@ -187,20 +193,21 @@ namespace Winform
         // 센서정보 수신
         private void SensorSignalCollector(int group, int room, string status)
         {
-            Console.WriteLine("센서 신호 감지" + group.ToString() + "사동 " + room.ToString() + "호실 " + status);
             OpenLogHistiorySetting();
             GroupButtonColorChange();
             selectGroupCode = "G" + ReturnIntToString(group.ToString());
             selectRoomCode = "R" + ReturnIntToString(room.ToString());
             GroupChange(selectGroupCode);
             RoomChange(selectGroupCode, selectRoomCode);
-            CameraPTZ();
         }
 
         // 방 상태 변경
         private void RoomStatusUpdate(int group, int room, string status)
         {
             Console.WriteLine(" ================================== RoomStatusUpdate ==========================");
+            Console.WriteLine("group = " + group);
+            Console.WriteLine("room = " + room);
+            Console.WriteLine("status = " + status);
             string groupStr = group.ToString();
             string roomStr = room.ToString();
             string sql = "";
@@ -230,8 +237,6 @@ namespace Winform
             query.ExecuteNonQuery();
 
             query.Dispose();
-
-
         }
 
         // 사동 그룹 정보 셋팅
@@ -583,7 +588,16 @@ namespace Winform
             string preset = "1";
             camera_preset_info.Text = camera + " / " + preset;
 
-            CameraChange(groupCode, roomCode, camera, preset);
+            //CameraChange(groupCode, roomCode, camera, preset);
+
+            if (!isOpenFlag)
+            {
+                CameraPTZ();
+            }
+            else
+            {
+                isOpenFlag = false;
+            }
         }
 
         // string 숫자 두자리 변형
