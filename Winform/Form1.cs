@@ -625,7 +625,7 @@ namespace Winform
                 cameraGroupCode = selectGroupCode;
                 cameraRoomCode = selectRoomCode;
 
-                axVLCPlugin21.playlist.add(rtspHeader + userName + ":" + userPw + "@" + nvrIp + "/2/high", null, null);
+                axVLCPlugin21.playlist.add(rtspHeader + userName + ":" + userPw + "@" + nvrIp + "/" + channel  + "/high", null, null);
                 axVLCPlugin21.playlist.next();
                 axVLCPlugin21.playlist.play();
             }
