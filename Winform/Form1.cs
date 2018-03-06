@@ -5,12 +5,9 @@ using System.Drawing;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Windows.Forms;
-using System.Timers;
 
-using System.IO;
 using System.IO.Ports;
 using System.Collections;
-using Npgsql;
 using DigestTest;
 using Newtonsoft.Json.Linq;
 
@@ -18,25 +15,15 @@ namespace Winform
 {
     public partial class Form1 : Form
     {
-        static NpgsqlConnection conn;
-        static NpgsqlCommand query = null;
-        static NpgsqlDataAdapter da;
-
         List<Hashtable> groupList = new List<Hashtable>();
         List<Hashtable> roomList = new List<Hashtable>();
 
-        DataSet historyDataSet = new DataSet();
-        DataTable historyDataTable = new DataTable();
-
-        DataSet groupDataSet = new DataSet();
         DataTable groupDataTable = new DataTable();
-
-        DataSet roomDataSet = new DataSet();
         DataTable roomDataTable = new DataTable();
 
         string selectGroupCode = "";
         string selectRoomCode = "";
-        
+
         string cameraGroupCode = "";
         string cameraRoomCode = "";
         System.Timers.Timer aTimer;
@@ -53,12 +40,13 @@ namespace Winform
 
         Boolean isOpenFlag = true;
 
+        DBConnection dbc = new DBConnection();
+
         public Form1()
         {
             InitializeComponent();
 
-            conn = new NpgsqlConnection("Host=192.168.10.124;Username=postgres;Password=admin;Database=postgres");
-            conn.Open();
+            dbc.Open();
 
             GroupButtonSetting();
             OpenLogHistiorySetting();
@@ -152,7 +140,7 @@ namespace Winform
 
                     if (data.Trim() != sensorSignal)
                     {
-                        if(sensorSignal == "")
+                        if (sensorSignal == "")
                         {
                             isOpenFlag = true;
                         }
@@ -169,7 +157,7 @@ namespace Winform
                             RoomStatusUpdate(1, 1, status);
                             SensorSignalCollector(1, 1, status);
                         }
-                        else if(data.Trim() == "0")
+                        else if (data.Trim() == "0")
                         {
                             status = "O";
                             RoomStatusUpdate(1, 1, status);
@@ -246,11 +234,7 @@ namespace Winform
             sql += "WHERE ";
             sql += "group_code = 'G" + ReturnIntToString(groupStr) + "' AND room_code = 'R" + ReturnIntToString(roomStr) + "'";
 
-            query = new NpgsqlCommand(sql, conn);
-            
-            query.ExecuteNonQuery();
-
-            query.Dispose();
+            dbc.Update(sql);
         }
 
         // 사동 그룹 정보 셋팅
@@ -270,12 +254,7 @@ namespace Winform
             sql += "GROUP BY group_code ";
             sql += "ORDER BY group_code ASC ";
 
-            da = new NpgsqlDataAdapter(sql, conn);
-            groupDataSet.Reset();
-
-            da.Fill(groupDataSet);
-            groupDataTable = groupDataSet.Tables[0];
-            groupDataSet.Dispose();
+            groupDataTable = dbc.SelectDataTable(sql);
 
             int seq = 0;
             int btnHeight = 70;
@@ -330,12 +309,7 @@ namespace Winform
             sql += "GROUP BY group_code ";
             sql += "ORDER BY group_code ASC ";
 
-            da = new NpgsqlDataAdapter(sql, conn);
-            groupDataSet.Reset();
-
-            da.Fill(groupDataSet);
-            groupDataTable = groupDataSet.Tables[0];
-            groupDataSet.Dispose();
+            groupDataTable = dbc.SelectDataTable(sql);
 
             foreach (DataRow row in groupDataTable.Rows)
             {
@@ -388,14 +362,8 @@ namespace Winform
                 sql += "ORDER BY event_time DESC ";
                 sql += "LIMIT 20 ";
 
-                da = new NpgsqlDataAdapter(sql, conn);
-                historyDataSet.Reset();
-
-                da.Fill(historyDataSet);
-                historyDataTable = historyDataSet.Tables[0];
+                DataTable historyDataTable = dbc.SelectDataTable(sql);
                 dataGridView1.DataSource = historyDataTable;
-
-                historyDataSet.Dispose();
 
                 dataGridView1.Columns[3].Visible = false;
                 dataGridView1.Columns[5].Visible = false;
@@ -460,12 +428,7 @@ namespace Winform
                 sql += "WHERE group_code = '" + groupCode + "' ";
                 sql += "ORDER BY room_code ASC";
 
-                da = new NpgsqlDataAdapter(sql, conn);
-                roomDataSet.Reset();
-
-                da.Fill(roomDataSet);
-                roomDataTable = roomDataSet.Tables[0];
-                roomDataSet.Dispose();
+                roomDataTable = dbc.SelectDataTable(sql);
 
                 foreach (DataRow row in roomDataTable.Rows)
                 {
@@ -527,9 +490,6 @@ namespace Winform
 
                 room_detail_textBox.Text = group_code_name + " " + room_name + "호 이력";
 
-                DataSet roomHistoryDataSet = new DataSet();
-                DataTable roomHistoryDataTable = new DataTable();
-
                 string sql = "";
                 sql += "SELECT ";
                 sql += "    group_code                          AS group_code, ";
@@ -552,14 +512,9 @@ namespace Winform
                 sql += "      AND room_code = '" + roomCode + "' ";
                 sql += "ORDER BY event_time DESC ";
                 sql += "LIMIT 10";
-                da = new NpgsqlDataAdapter(sql, conn);
-                roomHistoryDataSet.Reset();
 
-                da.Fill(roomHistoryDataSet);
-                roomHistoryDataTable = roomHistoryDataSet.Tables[0];
+                DataTable roomHistoryDataTable = dbc.SelectDataTable(sql);
                 dataGridView2.DataSource = roomHistoryDataTable;
-
-                roomHistoryDataSet.Dispose();
 
                 dataGridView2.Columns[3].Visible = false;
                 dataGridView2.Columns[5].Visible = false;
@@ -572,9 +527,6 @@ namespace Winform
         // 카메라 변경
         private void CameraSetting(string groupCode, string roomCode)
         {
-            DataSet roomDetailDataSet = new DataSet();
-            DataTable roomDetailDataTable = new DataTable();
-
             string sql = "";
             sql += "SELECT ";
             sql += "    group_code AS group_code, ";
@@ -585,13 +537,7 @@ namespace Winform
             sql += "WHERE group_code = '" + groupCode + "' ";
             sql += "AND room_code = '" + roomCode + "'";
 
-            da = new NpgsqlDataAdapter(sql, conn);
-            roomDetailDataSet.Reset();
-
-            da.Fill(roomDetailDataSet);
-            roomDetailDataTable = roomDetailDataSet.Tables[0];
-
-            roomDetailDataSet.Dispose();
+            DataTable roomDetailDataTable = dbc.SelectDataTable(sql);
 
             int dataCount = roomDetailDataTable.Select().Length;
 
@@ -625,7 +571,7 @@ namespace Winform
                 cameraGroupCode = selectGroupCode;
                 cameraRoomCode = selectRoomCode;
 
-                axVLCPlugin21.playlist.add(rtspHeader + userName + ":" + userPw + "@" + nvrIp + "/" + channel  + "/high", null, null);
+                axVLCPlugin21.playlist.add(rtspHeader + userName + ":" + userPw + "@" + nvrIp + "/" + channel + "/high", null, null);
                 axVLCPlugin21.playlist.next();
                 axVLCPlugin21.playlist.play();
             }
